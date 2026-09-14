@@ -47,6 +47,16 @@
   #slideArea { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; padding: 10px; overflow: hidden; background: #050505; }
   #canvas { width: 100%; height: 100%; background: #fff; color: #111; border-radius: 10px; position: relative; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.5); touch-action: none; }
   #canvas.present { border-radius: 0; }
+
+  @keyframes slideInRight { from { transform: translateX(80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes slideInLeft { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes zoomIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  #canvas.anim-right { animation: slideInRight 0.4s ease-out; }
+  #canvas.anim-left { animation: slideInLeft 0.4s ease-out; }
+  #canvas.anim-fade { animation: fadeIn 0.4s ease-out; }
+  #canvas.anim-zoom { animation: zoomIn 0.4s ease-out; }
+
   .text-block { position: absolute; min-width: 40px; min-height: 30px; padding: 6px 8px; outline: none; cursor: move; white-space: pre-wrap; word-wrap: break-word; line-height: 1.3; border: 1px dashed transparent; }
   .text-block:focus { border-color: #4a90e2; cursor: text; }
   .text-block.selected { border: 1px dashed #97ce4c; }
@@ -112,7 +122,7 @@
   <div id="menuHeader">
     <h1>РИК-ПРЕЗЕНТАЦИИ™</h1>
     <button class="icon-btn" id="importBtn" title="Импорт">⬆</button>
-    <button class="icon-btn" id="exportAllBtn" title="Экспорт">⬇</button>
+    <button class="icon-btn" id="exportAllBtn" title="Экспорт JSON">⬇</button>
   </div>
   <div id="menuSub">Редактор презентаций</div>
   <div id="presList"></div>
@@ -125,6 +135,8 @@
   <div id="topbar">
     <button class="icon-btn" id="backBtn">←</button>
     <div class="title" id="docTitle">Презентация</div>
+    <button class="icon-btn" id="animBtn" title="Анимация переходов">🎞</button>
+    <button class="icon-btn" id="exportPngBtn" title="Экспорт в PNG">📷</button>
     <button class="icon-btn" id="renameBtn">✎</button>
     <button class="icon-btn" id="textBtn">T</button>
     <button class="icon-btn" id="imgBtn">🖼</button>
@@ -179,7 +191,7 @@
 
 <script>
 (function(){
-  const STORAGE_KEY = 'rick_presentations_v11';
+  const STORAGE_KEY = 'rick_presentations_v12';
 
   const menu = document.getElementById('menu');
   const editor = document.getElementById('editor');
@@ -210,7 +222,7 @@
   function uid(){ return 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
   function uidEl(){ return 'e' + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
   function newSlide(){ return { bg: '#ffffff', elements: [] }; }
-  function newPresentation(title){ return { id: uid(), title: title || 'Новая', slides: [newSlide()], updatedAt: Date.now() }; }
+  function newPresentation(title){ return { id: uid(), title: title || 'Новая', slides: [newSlide()], updatedAt: Date.now(), animation: 'fade' }; }
   function cur(){ return currentId ? db.presentations[currentId] : null; }
 
   function showToast(msg){
@@ -234,6 +246,7 @@
           Object.values(db.presentations).forEach(pr => {
             if (!Array.isArray(pr.slides) || !pr.slides.length) pr.slides = [newSlide()];
             pr.slides.forEach(s => { if (!Array.isArray(s.elements)) s.elements = []; if (!s.bg) s.bg = '#ffffff'; });
+            if (!pr.animation) pr.animation = 'fade';
           });
         }
       }
@@ -318,6 +331,22 @@
     renderCanvas(); renderThumbs();
   }
 
+  function switchSlide(newIndex, direction){
+    const pr = cur(); if (!pr) return;
+    if (newIndex < 0 || newIndex >= pr.slides.length) return;
+    if (newIndex === pr.current) return;
+    const dir = direction || (newIndex > pr.current ? 'right' : 'left');
+    pr.current = newIndex;
+    render();
+    const anim = pr.animation || 'fade';
+    if (anim === 'none') return;
+    const cls = 'anim-' + (anim === 'slide' ? dir : anim);
+    canvas.classList.remove('anim-right','anim-left','anim-fade','anim-zoom');
+    void canvas.offsetWidth;
+    canvas.classList.add(cls);
+    setTimeout(() => canvas.classList.remove('anim-right','anim-left','anim-fade','anim-zoom'), 450);
+  }
+
   function renderCanvas(){
     canvas.innerHTML = '';
     const pr = cur();
@@ -337,7 +366,7 @@
       const t = s.elements.find(e => e.type === 'text');
       d.textContent = t ? t.text.slice(0, 25) : (s.elements.length ? '🖼' : '—');
       d.style.background = s.bg || '#fff';
-      d.onclick = e => { if (e.target.classList.contains('dup')) return; pr.current = i; render(); scheduleSave(); };
+      d.onclick = e => { if (e.target.classList.contains('dup')) return; switchSlide(i); scheduleSave(); };
       const dupB = document.createElement('button');
       dupB.className = 'dup'; dupB.textContent = '⧉';
       dupB.onclick = e => { e.stopPropagation(); duplicateSlide(i); };
@@ -833,8 +862,8 @@
         const pr = cur();
         const sl = t.build();
         pr.slides.splice(pr.current + 1, 0, ...sl);
-        pr.current += sl.length;
-        render(); scheduleSave(); showToast('Слайд добавлен');
+        switchSlide(pr.current + sl.length);
+        scheduleSave(); showToast('Слайд добавлен');
       };
       list.appendChild(b);
     });
@@ -857,12 +886,164 @@
     }, opts || {});
   }
 
+  // ===== ЭКСПОРТ В PNG =====
+  function downloadPng(dataUrl, name){
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  async function renderSlideToPng(slideIndex){
+    const pr = cur();
+    if (!pr) throw new Error('Нет презентации');
+    const slide = pr.slides[slideIndex];
+    const w = canvas.offsetWidth || 640;
+    const h = canvas.offsetHeight || 360;
+
+    const clone = document.createElement('div');
+    clone.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+    clone.style.cssText = `width:${w}px;height:${h}px;background:${slide.bg || '#ffffff'};position:relative;overflow:hidden;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;color:#111;`;
+
+    slide.elements.forEach(el => {
+      const node = createElNode(el);
+      node.contentEditable = 'false';
+      node.style.cursor = 'default';
+      node.classList.remove('selected');
+      const hs = node.querySelectorAll && node.querySelectorAll('.handle');
+      if (hs) hs.forEach(hh => hh.remove());
+      clone.appendChild(node);
+    });
+
+    const xml = new XMLSerializer().serializeToString(clone);
+    const svgStr = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><foreignObject x="0" y="0" width="100%" height="100%">${xml}</foreignObject></svg>`;
+
+    const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+
+    try {
+      const img = await new Promise((resolve, reject) => {
+        const im = new Image();
+        im.onload = () => resolve(im);
+        im.onerror = () => reject(new Error('Не удалось отрендерить слайд'));
+        im.src = url;
+      });
+
+      const c = document.createElement('canvas');
+      const scale = 2;
+      c.width = w * scale;
+      c.height = h * scale;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = slide.bg || '#ffffff';
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.drawImage(img, 0, 0, c.width, c.height);
+      return c.toDataURL('image/png');
+    } finally {
+      URL.revokeObjectURL(url);
+    }
+  }
+
+  function openExportDialog(){
+    const pr = cur(); if (!pr) return;
+    modalTitle.textContent = 'Экспорт слайдов';
+    modalText.textContent = 'Сохранить как PNG-картинки:';
+    modalContent.innerHTML = '';
+    const list = document.createElement('div'); list.className = 'tpl-list';
+
+    const b1 = document.createElement('button');
+    b1.className = 'tpl-item';
+    b1.innerHTML = `<span class="ico">📄</span><span>Текущий слайд (${pr.current+1})</span>`;
+    b1.onclick = async () => {
+      closeModal();
+      showToast('Готовлю картинку...');
+      try {
+        const dataUrl = await renderSlideToPng(pr.current);
+        downloadPng(dataUrl, 'slide-' + (pr.current+1) + '.png');
+        showToast('Сохранено!');
+      } catch(e) {
+        console.error(e);
+        showToast('Ошибка: ' + e.message);
+      }
+    };
+    list.appendChild(b1);
+
+    const b2 = document.createElement('button');
+    b2.className = 'tpl-item';
+    b2.innerHTML = `<span class="ico">📚</span><span>Все слайды (${pr.slides.length} PNG)</span>`;
+    b2.onclick = async () => {
+      closeModal();
+      showToast('Готовлю ' + pr.slides.length + ' картинок...');
+      let ok = 0, fail = 0;
+      for (let i = 0; i < pr.slides.length; i++) {
+        try {
+          const dataUrl = await renderSlideToPng(i);
+          downloadPng(dataUrl, 'slide-' + (i+1) + '.png');
+          ok++;
+        } catch(e) {
+          console.error('Slide ' + i, e);
+          fail++;
+        }
+        await new Promise(r => setTimeout(r, 500));
+      }
+      showToast('Готово: ' + ok + ' ok' + (fail ? ', ' + fail + ' fail' : ''));
+    };
+    list.appendChild(b2);
+
+    modalContent.appendChild(list);
+    modalOk.style.display = 'none';
+    modalCancel.textContent = 'Закрыть';
+    modalCancel.onclick = closeModal;
+    modal.classList.add('show');
+  }
+
+  function openAnimDialog(){
+    const pr = cur(); if (!pr) return;
+    const curAnim = pr.animation || 'fade';
+    modalTitle.textContent = 'Анимация переходов';
+    modalText.textContent = 'Как переключать слайды:';
+    modalContent.innerHTML = '';
+    const list = document.createElement('div'); list.className = 'tpl-list';
+    const opts = [
+      ['none', '🚫', 'Нет'],
+      ['fade', '✨', 'Плавное появление'],
+      ['slide', '➡', 'Сдвиг в сторону'],
+      ['zoom', '🔍', 'Приближение']
+    ];
+    opts.forEach(([val, ico, name]) => {
+      const b = document.createElement('button');
+      b.className = 'tpl-item';
+      if (curAnim === val) { b.style.background = '#97ce4c'; b.style.color = '#0a0a0a'; }
+      b.innerHTML = `<span class="ico">${ico}</span><span>${name}</span>`;
+      b.onclick = () => {
+        pr.animation = val;
+        save(); closeModal();
+        showToast('Анимация: ' + name);
+        if (val !== 'none') {
+          canvas.classList.remove('anim-right','anim-left','anim-fade','anim-zoom');
+          void canvas.offsetWidth;
+          canvas.classList.add('anim-' + (val === 'slide' ? 'right' : val));
+          setTimeout(() => canvas.classList.remove('anim-right','anim-left','anim-fade','anim-zoom'), 500);
+        }
+      };
+      list.appendChild(b);
+    });
+    modalContent.appendChild(list);
+    modalOk.style.display = 'none';
+    modalCancel.textContent = 'Закрыть';
+    modalCancel.onclick = closeModal;
+    modal.classList.add('show');
+  }
+
   document.getElementById('backBtn').addEventListener('click', backToMenu);
   document.getElementById('textBtn').addEventListener('click', () => addText());
   document.getElementById('imgBtn').addEventListener('click', pickImage);
   document.getElementById('fab').addEventListener('click', () => addText());
   document.getElementById('dupBtn').addEventListener('click', duplicateSelected);
   document.getElementById('newPresBtn').addEventListener('click', createEmptyPres);
+  document.getElementById('animBtn').addEventListener('click', openAnimDialog);
+  document.getElementById('exportPngBtn').addEventListener('click', openExportDialog);
   document.getElementById('renameBtn').addEventListener('click', () => {
     const pr = cur(); if (!pr) return;
     openPrompt('Название', '', pr.title, v => { pr.title = v; pr.updatedAt = Date.now(); docTitle.textContent = v; save(); });
@@ -879,8 +1060,8 @@
       render(); save(); showToast('Удалён');
     });
   });
-  document.getElementById('prevBtn').addEventListener('click', () => { const pr = cur(); if (pr.current > 0) { pr.current--; render(); save(); } });
-  document.getElementById('nextBtn').addEventListener('click', () => { const pr = cur(); if (pr.current < pr.slides.length - 1) { pr.current++; render(); save(); } });
+  document.getElementById('prevBtn').addEventListener('click', () => { const pr = cur(); if (pr.current > 0) switchSlide(pr.current - 1, 'left'); save(); });
+  document.getElementById('nextBtn').addEventListener('click', () => { const pr = cur(); if (pr.current < pr.slides.length - 1) switchSlide(pr.current + 1, 'right'); save(); });
 
   const thumbsBtn = document.createElement('button');
   thumbsBtn.className = 'icon-btn'; thumbsBtn.textContent = '☰'; thumbsBtn.title = 'Слайды';
@@ -918,8 +1099,8 @@
     const t = e.changedTouches[0];
     const dx = t.clientX - tX, dy = t.clientY - tY, dt = Date.now() - tT;
     if (dt < 700 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
-      if (dx < 0 && pr.current < pr.slides.length - 1) { pr.current++; render(); save(); }
-      else if (dx > 0 && pr.current > 0) { pr.current--; render(); save(); }
+      if (dx < 0 && pr.current < pr.slides.length - 1) { switchSlide(pr.current + 1, 'right'); save(); }
+      else if (dx > 0 && pr.current > 0) { switchSlide(pr.current - 1, 'left'); save(); }
     }
   }, { passive: true });
 
@@ -928,8 +1109,8 @@
     const inText = e.target.classList && e.target.classList.contains('text-block') && e.target.isContentEditable;
     if (inText) return;
     const pr = cur(); if (!pr) return;
-    if (e.key === 'ArrowRight' || e.key === 'PageDown') { if (pr.current < pr.slides.length - 1) { pr.current++; render(); save(); } }
-    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { if (pr.current > 0) { pr.current--; render(); save(); } }
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') { if (pr.current < pr.slides.length - 1) { switchSlide(pr.current + 1, 'right'); save(); } }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { if (pr.current > 0) { switchSlide(pr.current - 1, 'left'); save(); } }
     else if (e.key === 'Escape') exitPresent();
     else if ((e.key === 'Delete' || e.key === 'Backspace') && selectedEl) deleteSelected();
     else if ((e.ctrlKey || e.metaKey) && e.key === 'd') { e.preventDefault(); duplicateSelected(); }
