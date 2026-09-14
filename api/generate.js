@@ -12,7 +12,7 @@ module.exports = async function handler(req, res) {
 
   const body = req.body || {};
   const prompt = body.prompt;
-  const model = body.model || 'gemini-2.0-flash';
+  const model = body.model || 'gemini-3.8-flash';
 
   if (!prompt) {
     res.status(400).json({ error: 'No prompt provided' });
