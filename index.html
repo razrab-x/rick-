@@ -129,7 +129,7 @@
     <button class="icon-btn" id="importBtn" title="Импорт">⬆</button>
     <button class="icon-btn" id="exportAllBtn" title="Экспорт">⬇</button>
   </div>
-  <div id="menuSub">AI + картинки</div>
+  <div id="menuSub">AI через прокси-сервер</div>
   <div id="presList"></div>
   <div id="menuFooter">
     <button id="aiNewBtn" class="ai">🤖 ИИ</button>
@@ -200,16 +200,18 @@
 
 <script>
 /* ============================================================
-   ВСТАВЬ СВОЙ API-КЛЮЧ GOOGLE GEMINI СЮДА
+   НАСТРОЙКИ
    ============================================================ */
+// USER_API_KEY больше НЕ НУЖЕН. Ключ живёт на сервере Vercel (GEMINI_KEY).
 const USER_API_KEY = '';
-/* ============================================================ */
-const GEMINI_MODEL = 'gemini-3.8-flash';
+// Модель Gemini. Если у тебя работает другая — поменяй.
+const GEMINI_MODEL = 'gemini-2.0-flash';
+// Картинки. false = отключены (рекомендуется).
 const ENABLE_IMAGES = false;
 /* ============================================================ */
 
 (function(){
-  const STORAGE_KEY = 'rick_presentations_v9';
+  const STORAGE_KEY = 'rick_presentations_v10';
 
   const menu = document.getElementById('menu');
   const editor = document.getElementById('editor');
@@ -901,30 +903,6 @@ const ENABLE_IMAGES = false;
     }, opts || {});
   }
 
-  // ===== IMAGE SOURCES (Pollinations + Picsum fallback) =====
-  function buildImageSources(prompt, w, h){
-    const seed = Math.floor(Math.random() * 1000000);
-    const encoded = encodeURIComponent(prompt).replace(/%20/g, '+');
-    const encodedSeed = encodeURIComponent(prompt.slice(0, 40)).replace(/%20/g, '+');
-    return [
-      `https://image.pollinations.ai/prompt/${encoded}?width=${Math.round(w)}&height=${Math.round(h)}&nologo=true&seed=${seed}`,
-      `https://picsum.photos/seed/${encodedSeed}/400/300`
-    ];
-  }
-
-  function makeImageEl(prompt, x, y, w, h){
-    const sources = buildImageSources(prompt, w, h);
-    return {
-      id: uidEl(), type: 'image',
-      src: sources[0],
-      _fallbackSrc: sources[1],
-      x, y, w, h, rot: 0, radius: 8, opacity: 1,
-      aspectLock: true, shadow: false, border: false,
-      aiPrompt: prompt
-    };
-  }
-
-  // ===== AI GENERATION =====
   const AI_LOCAL = {
     generate(topic, count, style){
       const T = topic.trim() || 'Тема';
@@ -965,73 +943,53 @@ const ENABLE_IMAGES = false;
   };
 
   async function generateWithAI(userPrompt){
-    if (USER_API_KEY && USER_API_KEY.trim().length > 10) {
-      try {
-        const sysPrompt = `Ты — генератор презентаций. Пользователь даёт свободное описание. Ты анализируешь его и создаёшь структуру презентации.
+    const sysPrompt = `Ты — генератор презентаций. Пользователь даёт свободное описание. Ты анализируешь его и создаёшь структуру презентации.
 Верни ТОЛЬКО валидный JSON без markdown:
 {"title":"Название презентации","style":"light|dark|minimal","slides":[{"title":"...","bullets":["...","..."]}]}
 Правила:
 - Первый слайд — титульный с заголовком = тема.
 - Последний — финальный "Спасибо!".
 - Между ними — содержательные слайды с 3-5 пунктами каждый.
-- "style" выбирай из текста пользователя: если он просит тёмный — dark, минимал — minimal, иначе light.
-- Количество слайдов: если пользователь сказал число — используй его, иначе 6-8.
-- Пиши на русском языке.
-- Каждый буллет — короткая фраза, не длиннее 80 символов.
-- Без markdown-обёрток, только чистый JSON.`;
+- "style" выбирай из текста: тёмный → dark, минимал → minimal, иначе light.
+- Количество слайдов: если сказано число — используй, иначе 6-8.
+- Пиши на русском.
+- Каждый буллет — короткая фраза до 80 символов.
+- Без markdown-обёрток, чистый JSON.`;
 
-        const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${USER_API_KEY}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [
-                { role: 'user', parts: [{ text: sysPrompt + '\n\nЗапрос пользователя: ' + userPrompt }] }
-              ],
-              generationConfig: { responseMimeType: 'application/json', temperature: 0.9 }
-            })
-          }
-        );
-        const rawText = await res.text();
-        if (!res.ok) {
-          showErrorDialog('Google API ошибка ' + res.status, rawText);
-          throw new Error('API ' + res.status);
-        }
-        let data;
-        try { data = JSON.parse(rawText); }
-        catch(e) { showErrorDialog('Ответ не JSON', rawText.slice(0, 800)); throw e; }
-
-        const text = (data.candidates?.[0]?.content?.parts?.[0]?.text || '').trim();
-        if (!text) {
-          showErrorDialog('Пустой ответ от Gemini', rawText.slice(0, 800));
-          throw new Error('Empty');
-        }
-        const cleaned = text.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/```$/,'').trim();
-        let parsed;
-        try { parsed = JSON.parse(cleaned); }
-        catch(e) { showErrorDialog('Не распарсил JSON от Gemini', text.slice(0, 800)); throw e; }
-
-        if (parsed && Array.isArray(parsed.slides) && parsed.slides.length) {
-          return {
-            title: parsed.title || 'Презентация',
-            style: parsed.style || 'light',
-            slides: buildSlidesFromAI(parsed.slides, parsed.style || 'light', parsed.title || 'Презентация')
-          };
-        }
-        showErrorDialog('Структура не та', JSON.stringify(parsed).slice(0, 800));
-        throw new Error('Bad structure');
-      } catch(e) {
-        console.error('AI error:', e);
-        showToast('ИИ не ответил, использую локальный');
-        await sleep(400);
-        const count = parseCountFromPrompt(userPrompt) || 6;
-        const style = parseStyleFromPrompt(userPrompt) || 'light';
-        const title = userPrompt.slice(0, 50);
-        return { title, style, slides: AI_LOCAL.generate(userPrompt, count, style) };
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: sysPrompt + '\n\nЗапрос: ' + userPrompt,
+          model: GEMINI_MODEL
+        })
+      });
+      const rawText = await res.text();
+      if (!res.ok) {
+        showErrorDialog('Прокси вернул ' + res.status, rawText);
+        throw new Error('Proxy ' + res.status);
       }
-    } else {
-      await sleep(700);
+      let data;
+      try { data = JSON.parse(rawText); } catch(e) { showErrorDialog('Ответ не JSON', rawText.slice(0, 800)); throw e; }
+      const text = (data.candidates?.[0]?.content?.parts?.[0]?.text || '').trim();
+      if (!text) { showErrorDialog('Пустой ответ', rawText.slice(0, 800)); throw new Error('Empty'); }
+      const cleaned = text.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/```$/,'').trim();
+      let parsed;
+      try { parsed = JSON.parse(cleaned); } catch(e) { showErrorDialog('Не распарсил JSON', text.slice(0, 800)); throw e; }
+      if (parsed && Array.isArray(parsed.slides) && parsed.slides.length) {
+        return {
+          title: parsed.title || 'Презентация',
+          style: parsed.style || 'light',
+          slides: buildSlidesFromAI(parsed.slides, parsed.style || 'light', parsed.title || 'Презентация')
+        };
+      }
+      showErrorDialog('Структура не та', JSON.stringify(parsed).slice(0, 800));
+      throw new Error('Bad structure');
+    } catch(e) {
+      console.error('AI error:', e);
+      showToast('ИИ не ответил, использую локальный');
+      await sleep(400);
       const count = parseCountFromPrompt(userPrompt) || 6;
       const style = parseStyleFromPrompt(userPrompt) || 'light';
       const title = userPrompt.slice(0, 50);
@@ -1081,10 +1039,6 @@ const ENABLE_IMAGES = false;
       fontFamily: style === 'dark' ? 'Impact' : 'inherit',
       lineHeight: 1.25
     }));
-    if (ENABLE_IMAGES) {
-      const imgPrompt = `Title slide illustration for presentation about: ${topic}. Clean, professional, minimal`;
-      ts.elements.push(makeImageEl(imgPrompt, 20, 130, 260, 180));
-    }
     slides.push(ts);
 
     for (let i = 1; i < items.length - 1; i++) {
@@ -1094,22 +1048,14 @@ const ENABLE_IMAGES = false;
       const titleColor = style === 'dark' ? '#97ce4c' : '#111111';
       const textColor = style === 'dark' ? '#eeeeee' : '#222222';
 
-      let textWidth = 270;
-      let textX = 15;
-      if (ENABLE_IMAGES) {
-        const imgPrompt = `Illustration for slide titled "${(it.title || topic).slice(0,60)}" about ${topic}. Clean, professional, minimal`;
-        s.elements.push(makeImageEl(imgPrompt, 180, 10, 120, 90));
-        textWidth = 165;
-      }
-
-      s.elements.push(txt(it.title || ('Слайд ' + (i+1)), textX, 15, textWidth, 70, {
+      s.elements.push(txt(it.title || ('Слайд ' + (i+1)), 15, 15, 270, 70, {
         fontSize: 18, bold: true, color: titleColor,
         align: 'left', lineHeight: 1.25
       }));
-      let yy = ENABLE_IMAGES ? 110 : 95;
+      let yy = 95;
       (it.bullets || []).slice(0, 5).forEach(b => {
-        s.elements.push(txt('• ' + b, textX, yy, textWidth + (ENABLE_IMAGES ? -15 : 0), 36, {
-          fontSize: 13, lineHeight: 1.4, color: textColor
+        s.elements.push(txt('• ' + b, 15, yy, 270, 36, {
+          fontSize: 14, lineHeight: 1.4, color: textColor
         }));
         yy += 40;
       });
@@ -1139,10 +1085,7 @@ const ENABLE_IMAGES = false;
   function openAIDialog(){
     modalTitle.textContent = '🤖 Рик-ИИ';
     modalTitle.className = 'ai-title';
-    const usingRealAI = USER_API_KEY && USER_API_KEY.trim().length > 10;
-    modalText.textContent = usingRealAI
-      ? 'Опиши, что хочешь — ИИ сделает сам.'
-      : 'Ключ не вставлен. Работает локальный генератор.';
+    modalText.textContent = 'Опиши, что хочешь — ИИ сделает сам.';
     modalContent.innerHTML = '';
     aiLoader.classList.remove('show'); modalContent.style.display = '';
 
@@ -1153,14 +1096,12 @@ const ENABLE_IMAGES = false;
     const hint = document.createElement('p');
     hint.style.fontSize = '0.72rem';
     hint.style.color = '#666';
-    hint.textContent = usingRealAI
-      ? (ENABLE_IMAGES ? 'К слайдам будут добавлены картинки (Pollinations + Picsum fallback).' : 'Картинки отключены в настройках.')
-      : 'Ключ не вставлен → локальный режим.';
+    hint.textContent = 'Запрос идёт через прокси-сервер Vercel. Ключ в безопасности.';
     modalContent.appendChild(hint);
 
     modalOk.style.display = '';
     modalOk.className = 'ai-primary';
-    modalOk.textContent = usingRealAI ? '🤖 Сгенерировать' : '🤖 Сгенерировать (локально)';
+    modalOk.textContent = '🤖 Сгенерировать';
     modalCancel.textContent = 'Отмена';
     modalCancel.style.display = '';
     modalCancel.onclick = closeModal;
@@ -1173,7 +1114,7 @@ const ENABLE_IMAGES = false;
 
       modalContent.style.display = 'none';
       aiLoader.classList.add('show');
-      aiLoaderText.textContent = usingRealAI ? 'Думаю...' : 'Генерирую локально...';
+      aiLoaderText.textContent = 'Думаю...';
       modalOk.style.display = 'none';
       modalCancel.style.display = 'none';
 
@@ -1191,7 +1132,7 @@ const ENABLE_IMAGES = false;
       db.order.unshift(pr.id);
       save();
       openPres(pr.id);
-      showToast('Готово: ' + result.slides.length + ' слайдов' + (ENABLE_IMAGES ? ' + картинки' : ''));
+      showToast('Готово: ' + result.slides.length + ' слайдов');
     };
   }
 
