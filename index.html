@@ -10,8 +10,11 @@
   html, body { height: 100%; overflow: hidden; font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #eee; overscroll-behavior: none; }
 
   /* AUTH */
-  #authScreen { display: flex; flex-direction: column; height: 100vh; height: 100dvh; padding: 30px 24px; justify-content: center; background: linear-gradient(180deg, #0a0a0a 0%, #141414 100%); }
-  #authScreen h1 { color: #97ce4c; font-size: 1.6rem; letter-spacing: 3px; text-align: center; margin-bottom: 30px; text-shadow: 0 0 10px rgba(151,206,76,0.4); }
+  #authScreen { display: flex; flex-direction: column; height: 100vh; height: 100dvh; padding: 20px 24px; justify-content: center; background: radial-gradient(ellipse at top, #1a2a0a 0%, #0a0a0a 60%); overflow-y: auto; }
+  .rick-hero { width: 130px; height: 130px; object-fit: contain; display: block; margin: 0 auto 10px; filter: drop-shadow(0 0 25px rgba(151,206,76,0.6)); animation: float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  #authScreen h1 { color: #97ce4c; font-size: 1.5rem; letter-spacing: 3px; text-align: center; margin-bottom: 8px; text-shadow: 0 0 15px rgba(151,206,76,0.6); }
+  #authScreen .quote { text-align: center; color: #97ce4c; font-size: 0.78rem; font-style: italic; margin-bottom: 20px; min-height: 2.6em; padding: 0 12px; transition: opacity 0.4s; opacity: 1; }
   #authScreen .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
   #authScreen .tabs button { flex: 1; padding: 12px; background: #1a1a1a; color: #888; border: 1px solid #2a2a2a; border-radius: 8px; font-family: inherit; font-size: 0.9rem; cursor: pointer; letter-spacing: 1px; }
   #authScreen .tabs button.active { background: #97ce4c; color: #0a0a0a; border-color: #97ce4c; font-weight: bold; }
@@ -20,23 +23,26 @@
   #authScreen .submit { width: 100%; padding: 14px; background: #97ce4c; color: #0a0a0a; border: none; border-radius: 8px; font-family: inherit; font-size: 1rem; font-weight: bold; cursor: pointer; letter-spacing: 1px; margin-top: 6px; }
   #authScreen .submit:active { background: #7aab3a; }
   #authScreen .error { color: #ff6b6b; font-size: 0.85rem; text-align: center; margin-top: 12px; min-height: 1.2em; }
-  #authScreen .hint { color: #666; font-size: 0.75rem; text-align: center; margin-top: 20px; line-height: 1.5; }
+  #authScreen .hint { color: #666; font-size: 0.72rem; text-align: center; margin-top: 20px; line-height: 1.5; }
 
   /* MENU */
   #menu { display: none; flex-direction: column; height: 100vh; height: 100dvh; background: linear-gradient(180deg, #0a0a0a 0%, #141414 100%); }
   #menu.show { display: flex; }
   #menuHeader { padding: 14px 16px 8px; display: flex; align-items: center; gap: 10px; }
+  #menuHeader .morty-avatar { width: 38px; height: 38px; object-fit: contain; cursor: pointer; flex-shrink: 0; filter: drop-shadow(0 0 8px rgba(151,206,76,0.4)); transition: transform 0.2s; }
+  #menuHeader .morty-avatar:active { transform: scale(0.85) rotate(-10deg); }
   #menuHeader h1 { flex: 1; font-size: 1.05rem; letter-spacing: 2px; color: #97ce4c; text-shadow: 0 0 10px rgba(151,206,76,0.4); }
   #menuHeader .user { font-size: 0.75rem; color: #888; }
-  #menuHeader .icon-btn { background: #1f1f1f; border: 1px solid #333; color: #97ce4c; width: 36px; height: 36px; border-radius: 8px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  #menuHeader .icon-btn { background: #1f1f1f; border: 1px solid #333; color: #97ce4c; width: 36px; height: 36px; border-radius: 8px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   #menuHeader .icon-btn:active { background: #97ce4c; color: #0a0a0a; }
   #tabs { display: flex; padding: 8px 16px; gap: 6px; border-bottom: 1px solid #2a2a2a; }
   #tabs button { flex: 1; padding: 10px; background: transparent; border: none; color: #888; font-family: inherit; font-size: 0.8rem; letter-spacing: 1px; cursor: pointer; border-bottom: 2px solid transparent; }
   #tabs button.active { color: #97ce4c; border-bottom-color: #97ce4c; }
   #content { flex: 1; overflow-y: auto; padding: 12px; }
-  .empty { text-align: center; padding: 40px 20px; color: #555; font-size: 0.9rem; line-height: 1.6; }
+  .empty { text-align: center; padding: 30px 20px; color: #555; font-size: 0.9rem; line-height: 1.6; }
+  .empty .morty-empty { width: 100px; height: 100px; object-fit: contain; opacity: 0.85; display: block; margin: 0 auto 14px; filter: drop-shadow(0 0 12px rgba(151,206,76,0.3)); }
 
-  /* PRESENTATION CARDS */
+  /* CARDS */
   .pres-card { background: #161616; border: 1px solid #2a2a2a; border-radius: 12px; padding: 14px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; transition: all 0.15s; position: relative; margin-bottom: 10px; }
   .pres-card:active { background: #1d1d1d; border-color: #97ce4c; transform: scale(0.99); }
   .pres-card .p-title { font-size: 1.05rem; color: #eee; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 80px; }
@@ -127,7 +133,7 @@
   .thumb { min-width: 70px; height: 44px; background: #fff; color: #111; border-radius: 6px; padding: 4px; font-size: 0.5rem; overflow: hidden; border: 2px solid transparent; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; position: relative; }
   .thumb.active { border-color: #97ce4c; }
   .thumb .dup { position: absolute; top: 2px; right: 2px; background: #97ce4c; color: #0a0a0a; border: none; border-radius: 4px; font-size: 0.6rem; padding: 2px 4px; cursor: pointer; }
-  #modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
+  #modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
   #modal.show { display: flex; }
   #modal .box { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 18px; width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 10px; max-height: 85vh; overflow-y: auto; }
   #modal h3 { color: #97ce4c; font-size: 1rem; letter-spacing: 1px; }
@@ -152,9 +158,10 @@
 </head>
 <body>
 
-<!-- AUTH -->
 <div id="authScreen">
+  <img class="rick-hero" src="https://static.wikia.nocookie.net/rickandmorty/images/a/a6/Rick_Sanchez.png/revision/latest?cb=20160918081333" alt="Rick" onerror="this.style.display='none'">
   <h1>РИК-ПРЕЗЕНТАЦИИ™</h1>
+  <div class="quote" id="authQuote">— Wubba lubba dub dub, Морти.</div>
   <div class="tabs">
     <button id="tabLogin" class="active">ВХОД</button>
     <button id="tabRegister">РЕГИСТРАЦИЯ</button>
@@ -164,15 +171,16 @@
   <input type="password" id="inpPassword" placeholder="Пароль">
   <button class="submit" id="authSubmit">ВОЙТИ</button>
   <div class="error" id="authError"></div>
-  <div class="hint">Данные хранятся в облаке. Открывай с любого устройства.</div>
+  <div class="hint">Данные в облаке. Открывай с любого устройства.</div>
 </div>
 
-<!-- MENU -->
 <div id="menu">
   <div id="menuHeader">
+    <img class="morty-avatar" id="mortyBtn" src="https://static.wikia.nocookie.net/rickandmorty/images/e/ee/Morty_Smith.png/revision/latest?cb=20160918081333" alt="Morty" onerror="this.style.display='none'">
     <div style="flex:1;">
       <div class="user" id="userLabel">—</div>
     </div>
+    <button class="icon-btn" id="changeNameBtn" title="Изменить имя">👤</button>
     <button class="icon-btn" id="logoutBtn" title="Выйти">⎋</button>
   </div>
   <div id="tabs">
@@ -183,7 +191,6 @@
   <div id="content"></div>
 </div>
 
-<!-- EDITOR -->
 <div id="editor">
   <div id="topbar">
     <button class="icon-btn" id="backBtn">←</button>
@@ -245,7 +252,7 @@
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, deleteDoc, query, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, deleteDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDHvOpu6S3uzxk--TvdXWcxWHC-eCwaDnw",
@@ -255,22 +262,18 @@ const firebaseConfig = {
   messagingSenderId: "885246070185",
   appId: "1:885246070185:web:4c510d6b8fbd56e5c708b8"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// ===== STATE =====
 let currentUser = null;
 let userName = '';
 let isAdmin = false;
-let presentations = {};  // {id: {id, title, slides, animation, updatedAt}}
+let presentations = {};
 let currentPresId = null;
 let selectedEl = null;
 let saveTimer = null;
-let activeTab = 'mine';
 
-// ===== DOM =====
 const authScreen = document.getElementById('authScreen');
 const menu = document.getElementById('menu');
 const editor = document.getElementById('editor');
@@ -292,16 +295,35 @@ const modalCancel = document.getElementById('modalCancel');
 const fileInput = document.getElementById('fileInput');
 const colorInput = document.getElementById('colorInput');
 
+const RICK_QUOTES = [
+  '— Wubba lubba dub dub, Морти.',
+  '— Морти, не тупи.',
+  '— Я — Рик Санчез. Просто запомни это.',
+  '— Никто не существует целенаправленно, Морти. Все просто летят.',
+  '— Слушай, я не добрый. Я просто не настолько злой, как все остальные.',
+  '— Любовь — это химия. А химия — моя работа.',
+  '— Я гений, а ты — Морти.',
+  '— Szechuan sauce, Морти! Это была цель!',
+  '— Ты либо живёшь с этим, либо умираешь, пытаясь это понять.',
+  '— Никогда не сдавайся, пока не найдёшь другой способ.',
+  '— Хочешь, чтобы я что-то сделал? Скажи волшебное слово.',
+  '— Aww, jeez, Морти.',
+  '— Я не работаю с Джерри. Это правило.',
+  '— Девяносто девять процентов моих изобретений взрываются. Остальные работают.'
+];
+function randomQuote(){ return RICK_QUOTES[Math.floor(Math.random() * RICK_QUOTES.length)]; }
+
 function uid(){ return 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 function uidEl(){ return 'e' + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 function newSlide(){ return { bg: '#ffffff', elements: [] }; }
 function cur(){ return currentPresId ? presentations[currentPresId] : null; }
+function esc(s){ return String(s||'').replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c])); }
 
 function showToast(msg){
   toast.textContent = msg;
   toast.classList.add('show');
   clearTimeout(showToast._t);
-  showToast._t = setTimeout(()=>toast.classList.remove('show'), 2200);
+  showToast._t = setTimeout(()=>toast.classList.remove('show'), 2400);
 }
 function fmtDate(ts){
   if (!ts) return '—';
@@ -309,7 +331,7 @@ function fmtDate(ts){
   return d.toLocaleDateString('ru-RU', {day:'2-digit',month:'2-digit',year:'2-digit'}) + ' ' + d.toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'});
 }
 
-// ===== AUTH =====
+// auth
 let authMode = 'login';
 document.getElementById('tabLogin').onclick = () => setAuthMode('login');
 document.getElementById('tabRegister').onclick = () => setAuthMode('register');
@@ -328,20 +350,14 @@ document.getElementById('authSubmit').onclick = async () => {
   const name = document.getElementById('inpName').value.trim();
   const err = document.getElementById('authError');
   err.textContent = '';
-
   if (!email || !password) { err.textContent = 'Заполни email и пароль'; return; }
   if (password.length < 6) { err.textContent = 'Пароль минимум 6 символов'; return; }
-
   try {
     if (authMode === 'register') {
       if (!name || name.indexOf(' ') === -1) { err.textContent = 'Введи Имя и Фамилию'; return; }
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(cred.user, { displayName: name });
-      await setDoc(doc(db, 'users', cred.user.uid), {
-        name: name,
-        email: email,
-        createdAt: serverTimestamp()
-      });
+      await setDoc(doc(db, 'users', cred.user.uid), { name, email, createdAt: serverTimestamp() });
     } else {
       await signInWithEmailAndPassword(auth, email, password);
     }
@@ -357,7 +373,8 @@ function translateErr(code){
     'auth/weak-password': 'Пароль слишком слабый',
     'auth/user-not-found': 'Пользователь не найден',
     'auth/wrong-password': 'Неверный пароль',
-    'auth/invalid-credential': 'Неверный email или пароль'
+    'auth/invalid-credential': 'Неверный email или пароль',
+    'auth/network-request-failed': 'Проблема с сетью'
   };
   return map[code] || ('Ошибка: ' + code);
 }
@@ -385,20 +402,21 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// ===== LOAD =====
 async function loadPresentations(){
   presentations = {};
-  const snap = await getDocs(collection(db, 'users', currentUser.uid, 'presentations'));
-  snap.forEach(d => {
-    const data = d.data();
-    presentations[d.id] = {
-      id: d.id,
-      title: data.title || 'Без названия',
-      slides: data.slides || [newSlide()],
-      animation: data.animation || 'fade',
-      updatedAt: data.updatedAt ? (data.updatedAt.toMillis ? data.updatedAt.toMillis() : Date.now()) : Date.now()
-    };
-  });
+  try {
+    const snap = await getDocs(collection(db, 'users', currentUser.uid, 'presentations'));
+    snap.forEach(d => {
+      const data = d.data();
+      presentations[d.id] = {
+        id: d.id,
+        title: data.title || 'Без названия',
+        slides: data.slides || [newSlide()],
+        animation: data.animation || 'fade',
+        updatedAt: data.updatedAt ? (data.updatedAt.toMillis ? data.updatedAt.toMillis() : Date.now()) : Date.now()
+      };
+    });
+  } catch(e) { console.error(e); }
 }
 
 async function savePresentation(pr){
@@ -411,18 +429,13 @@ async function savePresentation(pr){
       updatedAt: serverTimestamp()
     });
     pr.updatedAt = Date.now();
-  } catch(e) {
-    console.error(e);
-    showToast('Не сохранилось: ' + e.message);
-  }
+  } catch(e) { console.error(e); showToast('Не сохранилось'); }
 }
-
 function scheduleSave(){
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => { if (cur()) savePresentation(cur()); }, 800);
 }
 
-// ===== TABS =====
 document.querySelectorAll('#tabs button').forEach(b => {
   b.onclick = () => {
     document.querySelectorAll('#tabs button').forEach(x => x.classList.remove('active'));
@@ -432,7 +445,6 @@ document.querySelectorAll('#tabs button').forEach(b => {
 });
 
 async function renderTab(tab){
-  activeTab = tab;
   content.innerHTML = '';
   if (tab === 'mine') renderMine();
   else if (tab === 'news') await renderNews();
@@ -442,7 +454,13 @@ async function renderTab(tab){
 function renderMine(){
   const ids = Object.keys(presentations).sort((a,b) => (presentations[b].updatedAt||0) - (presentations[a].updatedAt||0));
   if (!ids.length) {
-    content.innerHTML = '<div class="empty">Пока пусто, Морти.<br>Жми зелёную кнопку «+» — создай презентацию.</div>';
+    content.innerHTML = `
+      <div class="empty">
+        <img class="morty-empty" src="https://static.wikia.nocookie.net/rickandmorty/images/e/ee/Morty_Smith.png/revision/latest?cb=20160918081333" alt="Morty" onerror="this.style.display='none'">
+        <div style="color:#97ce4c;font-weight:bold;font-size:1rem;">Пока пусто, Морти.</div>
+        <div style="margin-top:10px;font-style:italic;color:#97ce4c;font-size:0.8rem;">${randomQuote()}</div>
+        <div style="margin-top:20px;">Жми зелёную кнопку «+» внизу.</div>
+      </div>`;
     fab.classList.remove('hide');
     fab.onclick = createNewPres;
     return;
@@ -469,27 +487,25 @@ function renderMine(){
   fab.onclick = createNewPres;
 }
 
-function esc(s){ return String(s||'').replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c])); }
-
 function createNewPres(){
-  openPrompt('Новая презентация', 'Название:', 'Презентация ' + (Object.keys(presentations).length+1), async v => {
-    const id = uid();
-    const pr = { id, title: v, slides: [newSlide()], animation: 'fade', updatedAt: Date.now() };
-    presentations[id] = pr;
-    await savePresentation(pr);
-    renderMine();
-    openPres(id);
-  });
+  showToast(randomQuote());
+  setTimeout(() => {
+    openPrompt('Новая презентация', 'Название:', 'Презентация ' + (Object.keys(presentations).length+1), async v => {
+      const id = uid();
+      const pr = { id, title: v, slides: [newSlide()], animation: 'fade', updatedAt: Date.now() };
+      presentations[id] = pr;
+      await savePresentation(pr);
+      renderMine();
+      openPres(id);
+    });
+  }, 400);
 }
 
 function duplicatePres(id){
-  const src = presentations[id];
-  if (!src) return;
+  const src = presentations[id]; if (!src) return;
   const nid = uid();
   const copy = JSON.parse(JSON.stringify(src));
-  copy.id = nid;
-  copy.title = src.title + ' (копия)';
-  copy.updatedAt = Date.now();
+  copy.id = nid; copy.title = src.title + ' (копия)'; copy.updatedAt = Date.now();
   copy.slides.forEach(s => s.elements.forEach(e => e.id = uidEl()));
   presentations[nid] = copy;
   savePresentation(copy).then(() => renderMine());
@@ -497,17 +513,14 @@ function duplicatePres(id){
 }
 
 function deletePres(id){
-  const pr = presentations[id];
-  if (!pr) return;
+  const pr = presentations[id]; if (!pr) return;
   openConfirm('Удалить?', `«${pr.title}»`, async () => {
     delete presentations[id];
     try { await deleteDoc(doc(db, 'users', currentUser.uid, 'presentations', id)); } catch(e){}
-    renderMine();
-    showToast('Удалено');
+    renderMine(); showToast('Удалено');
   });
 }
 
-// ===== NEWS =====
 async function renderNews(){
   content.innerHTML = '<div class="empty">Загружаю новости…</div>';
   let news = [];
@@ -516,9 +529,7 @@ async function renderNews(){
     snap.forEach(d => {
       const data = d.data();
       news.push({
-        id: d.id,
-        title: data.title || '',
-        body: data.body || '',
+        id: d.id, title: data.title || '', body: data.body || '',
         authorName: data.authorName || 'Аноним',
         createdAt: data.createdAt ? (data.createdAt.toMillis ? data.createdAt.toMillis() : 0) : 0
       });
@@ -528,7 +539,6 @@ async function renderNews(){
     content.innerHTML = '<div class="empty">Не удалось загрузить новости.<br>' + esc(e.message) + '</div>';
     return;
   }
-
   content.innerHTML = '';
   if (isAdmin) {
     const btn = document.createElement('button');
@@ -537,26 +547,20 @@ async function renderNews(){
     btn.onclick = addNews;
     content.appendChild(btn);
   }
-
   if (!news.length) {
     const e = document.createElement('div');
     e.className = 'empty';
-    e.textContent = 'Новостей пока нет.';
+    e.innerHTML = `<img class="morty-empty" src="https://static.wikia.nocookie.net/rickandmorty/images/e/ee/Morty_Smith.png/revision/latest?cb=20160918081333" onerror="this.style.display='none'">Новостей пока нет.`;
     content.appendChild(e);
     return;
   }
-
   news.forEach(n => {
     const card = document.createElement('div');
     card.className = 'news-card';
-    card.innerHTML = `
-      <h3>${esc(n.title)}</h3>
-      <div class="meta">${esc(n.authorName)} · ${fmtDate(n.createdAt)}</div>
-      <div class="body">${esc(n.body)}</div>`;
+    card.innerHTML = `<h3>${esc(n.title)}</h3><div class="meta">${esc(n.authorName)} · ${fmtDate(n.createdAt)}</div><div class="body">${esc(n.body)}</div>`;
     if (isAdmin) {
       const del = document.createElement('button');
-      del.className = 'del';
-      del.textContent = 'Удалить';
+      del.className = 'del'; del.textContent = 'Удалить';
       del.onclick = async () => {
         openConfirm('Удалить новость?', '', async () => {
           try { await deleteDoc(doc(db, 'news', n.id)); } catch(e){}
@@ -573,39 +577,32 @@ function addNews(){
   modalTitle.textContent = 'Новая новость';
   modalText.textContent = 'Что опубликовать?';
   modalContent.innerHTML = '';
-  const inpT = document.createElement('input');
-  inpT.type = 'text'; inpT.placeholder = 'Заголовок';
-  const inpB = document.createElement('textarea');
-  inpB.placeholder = 'Текст новости';
-  modalContent.appendChild(inpT);
-  modalContent.appendChild(inpB);
+  const inpT = document.createElement('input'); inpT.type = 'text'; inpT.placeholder = 'Заголовок';
+  const inpB = document.createElement('textarea'); inpB.placeholder = 'Текст новости';
+  modalContent.appendChild(inpT); modalContent.appendChild(inpB);
   modalOk.style.display = ''; modalOk.className = 'primary';
   modalOk.textContent = 'Опубликовать';
   modalCancel.textContent = 'Отмена';
   modal.classList.add('show');
   setTimeout(() => inpT.focus(), 50);
   modalOk.onclick = async () => {
-    const t = inpT.value.trim(); const b = inpB.value.trim();
+    const t = inpT.value.trim(), b = inpB.value.trim();
     if (!t || !b) { showToast('Заполни оба поля'); return; }
     closeModal();
     try {
       await addDoc(collection(db, 'news'), {
-        title: t,
-        body: b,
+        title: t, body: b,
         authorUid: currentUser.uid,
         authorName: userName,
         createdAt: serverTimestamp()
       });
       showToast('Опубликовано');
       renderNews();
-    } catch(e) {
-      showToast('Ошибка: ' + e.message);
-    }
+    } catch(e) { showToast('Ошибка: ' + e.message); }
   };
   modalCancel.onclick = closeModal;
 }
 
-// ===== COMMUNITY =====
 async function renderCommunity(){
   content.innerHTML = '<div class="empty">Загружаю пользователей…</div>';
   let users = [];
@@ -628,12 +625,7 @@ async function renderCommunity(){
   users.forEach(u => {
     const card = document.createElement('div');
     card.className = 'user-card';
-    card.innerHTML = `
-      <div class="avatar">${esc((u.name[0] || '?').toUpperCase())}</div>
-      <div class="info">
-        <div class="name">${esc(u.name)}</div>
-        <div class="email">${esc(u.email)}</div>
-      </div>`;
+    card.innerHTML = `<div class="avatar">${esc((u.name[0]||'?').toUpperCase())}</div><div class="info"><div class="name">${esc(u.name)}</div><div class="email">${esc(u.email)}</div></div>`;
     card.onclick = () => openUserFolder(u);
     content.appendChild(card);
   });
@@ -647,7 +639,6 @@ async function openUserFolder(u){
   modalCancel.textContent = 'Закрыть';
   modalCancel.onclick = closeModal;
   modal.classList.add('show');
-
   try {
     const snap = await getDocs(collection(db, 'users', u.uid, 'presentations'));
     const list = [];
@@ -660,8 +651,7 @@ async function openUserFolder(u){
       modalContent.innerHTML = '<div style="padding:20px;text-align:center;color:#888;">Пусто у него.</div>';
       return;
     }
-    const wrap = document.createElement('div');
-    wrap.className = 'tpl-list';
+    const wrap = document.createElement('div'); wrap.className = 'tpl-list';
     list.forEach(p => {
       const b = document.createElement('button');
       b.className = 'tpl-item';
@@ -1037,7 +1027,6 @@ function renderProps(){
   if (!selectedEl) { props.classList.remove('show'); return; }
   props.classList.add('show');
   const el = selectedEl.el;
-
   const r1 = document.createElement('div'); r1.className = 'row';
   r1.innerHTML = `<span class="lbl">Прозр.</span>`;
   r1.appendChild(mkRange(0, 100, Math.round((el.opacity||1)*100), v => {
@@ -1061,22 +1050,18 @@ function renderProps(){
       rf.appendChild(b);
     });
     props.appendChild(rf);
-
     const rs = document.createElement('div'); rs.className = 'row';
     rs.innerHTML = `<span class="lbl">Размер</span>`;
     rs.appendChild(mkRange(8, 120, el.fontSize || 22, v => { el.fontSize = v; selectedEl.node.style.fontSize = v + 'px'; scheduleSave(); }));
     props.appendChild(rs);
-
     const rlh = document.createElement('div'); rlh.className = 'row';
     rlh.innerHTML = `<span class="lbl">Строчн.</span>`;
     rlh.appendChild(mkRange(80, 300, Math.round((el.lineHeight||1.3)*100), v => { el.lineHeight = v/100; selectedEl.node.style.lineHeight = el.lineHeight; scheduleSave(); }));
     props.appendChild(rlh);
-
     const rls = document.createElement('div'); rls.className = 'row';
     rls.innerHTML = `<span class="lbl">Буквы</span>`;
     rls.appendChild(mkRange(-5, 30, el.letterSpacing || 0, v => { el.letterSpacing = v; selectedEl.node.style.letterSpacing = v + 'px'; scheduleSave(); }));
     props.appendChild(rls);
-
     const rc = document.createElement('div'); rc.className = 'row';
     rc.innerHTML = `<span class="lbl">Цвет/фон</span>`;
     const ci = document.createElement('input'); ci.type = 'color'; ci.value = el.color || '#111111';
@@ -1090,12 +1075,10 @@ function renderProps(){
     bc.onclick = () => { el.bg = 'transparent'; selectedEl.node.style.background = 'transparent'; scheduleSave(); };
     rc.appendChild(bc);
     props.appendChild(rc);
-
     const rr = document.createElement('div'); rr.className = 'row';
     rr.innerHTML = `<span class="lbl">Скругл.</span>`;
     rr.appendChild(mkRange(0, 50, el.radius || 0, v => { el.radius = v; selectedEl.node.style.borderRadius = v + 'px'; scheduleSave(); }));
     props.appendChild(rr);
-
     const rsh = document.createElement('div'); rsh.className = 'row';
     rsh.innerHTML = `<span class="lbl">Тень/обводка</span>`;
     const sh = document.createElement('button');
@@ -1122,7 +1105,6 @@ function renderProps(){
     lk.onclick = () => { el.aspectLock = !el.aspectLock; renderProps(); scheduleSave(); };
     rs.appendChild(lk);
     props.appendChild(rs);
-
     const rr = document.createElement('div'); rr.className = 'row';
     rr.innerHTML = `<span class="lbl">Поворот</span>`;
     const r1b = document.createElement('button'); r1b.className='mini'; r1b.textContent='↻90°';
@@ -1133,7 +1115,6 @@ function renderProps(){
     rr.appendChild(r2b);
     rr.appendChild(mkRange(-180, 180, Math.round(el.rot||0), v => { el.rot = v; applyStyles(selectedEl.node, el); scheduleSave(); }));
     props.appendChild(rr);
-
     const rf = document.createElement('div'); rf.className = 'row';
     rf.innerHTML = `<span class="lbl">Отражение</span>`;
     const fx = document.createElement('button'); fx.className='mini'+(el.flipX?' active':''); fx.textContent='⇋';
@@ -1146,7 +1127,6 @@ function renderProps(){
     rst.onclick = () => { el.rot = 0; el.flipX = false; el.flipY = false; applyStyles(selectedEl.node, el); renderProps(); scheduleSave(); };
     rf.appendChild(rst);
     props.appendChild(rf);
-
     const rrad = document.createElement('div'); rrad.className = 'row';
     rrad.innerHTML = `<span class="lbl">Скругл.</span>`;
     rrad.appendChild(mkRange(0, 200, el.radius || 0, v => { el.radius = v; selectedEl.node.style.borderRadius = v + 'px'; scheduleSave(); }));
@@ -1154,7 +1134,6 @@ function renderProps(){
     cir.onclick = () => { el.radius = 9999; selectedEl.node.style.borderRadius = '9999px'; scheduleSave(); };
     rrad.appendChild(cir);
     props.appendChild(rrad);
-
     const rsh = document.createElement('div'); rsh.className = 'row';
     rsh.innerHTML = `<span class="lbl">Тень/рамка</span>`;
     const sh = document.createElement('button'); sh.className='mini'+(el.shadow?' active':''); sh.textContent='Тень';
@@ -1276,7 +1255,6 @@ function txt(text, x, y, w, h, opts){
   }, opts || {});
 }
 
-// ===== PNG EXPORT =====
 function downloadPng(dataUrl, name){
   const a = document.createElement('a');
   a.href = dataUrl; a.download = name;
@@ -1292,24 +1270,17 @@ async function renderSlideToPng(slideIndex){
   clone.style.cssText = `position:fixed;left:-99999px;top:0;width:${w}px;height:${h}px;background:${slide.bg || '#ffffff'};overflow:hidden;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;color:#111;`;
   slide.elements.forEach(el => {
     const node = createElNode(el);
-    node.contentEditable = 'false';
-    node.style.cursor = 'default';
-    node.classList.remove('selected');
-    node.style.borderColor = 'transparent';
+    node.contentEditable = 'false'; node.style.cursor = 'default';
+    node.classList.remove('selected'); node.style.borderColor = 'transparent';
     const hs = node.querySelectorAll && node.querySelectorAll('.handle');
     if (hs) hs.forEach(hh => hh.remove());
     clone.appendChild(node);
   });
   document.body.appendChild(clone);
   try {
-    const c = await html2canvas(clone, {
-      backgroundColor: slide.bg || '#ffffff',
-      scale: 2, useCORS: true, allowTaint: true, logging: false
-    });
+    const c = await html2canvas(clone, { backgroundColor: slide.bg || '#ffffff', scale: 2, useCORS: true, allowTaint: true, logging: false });
     return c.toDataURL('image/png');
-  } finally {
-    document.body.removeChild(clone);
-  }
+  } finally { document.body.removeChild(clone); }
 }
 
 function openExportDialog(){
@@ -1318,13 +1289,11 @@ function openExportDialog(){
   modalText.textContent = 'Сохранить как PNG:';
   modalContent.innerHTML = '';
   const list = document.createElement('div'); list.className = 'tpl-list';
-
   const b1 = document.createElement('button');
   b1.className = 'tpl-item';
   b1.innerHTML = `<span class="ico">📄</span><span>Текущий слайд (${pr.current+1})</span>`;
   b1.onclick = async () => {
-    closeModal();
-    showToast('Готовлю картинку...');
+    closeModal(); showToast('Готовлю картинку...');
     try {
       const dataUrl = await renderSlideToPng(pr.current);
       downloadPng(dataUrl, 'slide-' + (pr.current+1) + '.png');
@@ -1332,7 +1301,6 @@ function openExportDialog(){
     } catch(e) { showToast('Ошибка: ' + e.message); }
   };
   list.appendChild(b1);
-
   const b2 = document.createElement('button');
   b2.className = 'tpl-item';
   b2.innerHTML = `<span class="ico">📚</span><span>Все слайды (${pr.slides.length} PNG)</span>`;
@@ -1341,17 +1309,13 @@ function openExportDialog(){
     showToast('Готовлю ' + pr.slides.length + ' картинок...');
     let ok = 0, fail = 0;
     for (let i = 0; i < pr.slides.length; i++) {
-      try {
-        const dataUrl = await renderSlideToPng(i);
-        downloadPng(dataUrl, 'slide-' + (i+1) + '.png');
-        ok++;
-      } catch(e) { fail++; }
+      try { const dataUrl = await renderSlideToPng(i); downloadPng(dataUrl, 'slide-' + (i+1) + '.png'); ok++; }
+      catch(e) { fail++; }
       await new Promise(r => setTimeout(r, 500));
     }
     showToast('Готово: ' + ok + ' ok' + (fail ? ', ' + fail + ' fail' : ''));
   };
   list.appendChild(b2);
-
   modalContent.appendChild(list);
   modalOk.style.display = 'none';
   modalCancel.textContent = 'Закрыть';
@@ -1366,12 +1330,7 @@ function openAnimDialog(){
   modalText.textContent = 'Как переключать слайды:';
   modalContent.innerHTML = '';
   const list = document.createElement('div'); list.className = 'tpl-list';
-  const opts = [
-    ['none', '🚫', 'Нет'],
-    ['fade', '✨', 'Плавное появление'],
-    ['slide', '➡', 'Сдвиг в сторону'],
-    ['zoom', '🔍', 'Приближение']
-  ];
+  const opts = [['none','🚫','Нет'],['fade','✨','Плавное появление'],['slide','➡','Сдвиг в сторону'],['zoom','🔍','Приближение']];
   opts.forEach(([val, ico, name]) => {
     const b = document.createElement('button');
     b.className = 'tpl-item';
@@ -1396,7 +1355,30 @@ function openAnimDialog(){
   modal.classList.add('show');
 }
 
-// ===== BUTTONS =====
+// ===== FUN BUTTONS =====
+document.getElementById('mortyBtn').onclick = () => showToast(randomQuote());
+setInterval(() => {
+  const q = document.getElementById('authQuote');
+  if (q && authScreen.style.display !== 'none') {
+    q.style.opacity = '0';
+    setTimeout(() => { q.textContent = randomQuote(); q.style.opacity = '1'; }, 400);
+  }
+}, 7000);
+
+document.getElementById('changeNameBtn').onclick = () => {
+  if (!currentUser) return;
+  openPrompt('Изменить имя', 'Введи Имя и Фамилию:', userName, async v => {
+    try {
+      await updateProfile(currentUser, { displayName: v });
+      await setDoc(doc(db, 'users', currentUser.uid), { name: v, email: currentUser.email }, { merge: true });
+      userName = v;
+      document.getElementById('userLabel').textContent = userName + (isAdmin ? ' 👑' : '');
+      showToast('Имя обновлено');
+    } catch(e) { showToast('Ошибка: ' + e.message); }
+  });
+};
+
+// ===== MAIN BUTTONS =====
 document.getElementById('backBtn').onclick = backToMenu;
 document.getElementById('textBtn').onclick = () => addText();
 document.getElementById('imgBtn').onclick = pickImage;
@@ -1471,7 +1453,6 @@ document.addEventListener('keydown', e => {
   else if ((e.ctrlKey || e.metaKey) && e.key === 'd') { e.preventDefault(); duplicateSelected(); }
 });
 
-// ===== MODAL =====
 function openPrompt(title, text, defaultValue, onOk){
   modalTitle.textContent = title;
   modalText.textContent = text || '';
