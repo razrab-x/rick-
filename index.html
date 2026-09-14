@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Рик-Презентации™ AI</title>
+<title>Рик-Презентации™</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; overflow: hidden; font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #eee; overscroll-behavior: none; }
@@ -27,7 +27,6 @@
   #menuFooter button { flex: 1; padding: 12px; border-radius: 8px; font-family: inherit; font-size: 0.85rem; background: #1f1f1f; border: 1px solid #333; color: #97ce4c; cursor: pointer; letter-spacing: 1px; }
   #menuFooter button:active { background: #97ce4c; color: #0a0a0a; }
   #menuFooter button.primary { background: #97ce4c; color: #0a0a0a; border-color: #97ce4c; font-weight: bold; }
-  #menuFooter button.ai { background: #6a4cce; color: #fff; border-color: #6a4cce; }
 
   #editor { display: none; flex-direction: column; height: 100vh; height: 100dvh; }
   #editor.show { display: flex; }
@@ -36,8 +35,6 @@
   #topbar .title { flex: 1; font-size: 0.8rem; color: #97ce4c; letter-spacing: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 80px; }
   .icon-btn { background: #1f1f1f; border: 1px solid #333; color: #97ce4c; min-width: 36px; height: 36px; padding: 0 8px; border-radius: 8px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .icon-btn:active { background: #97ce4c; color: #0a0a0a; }
-  .icon-btn.ai { color: #b19aff; border-color: #4a3a7a; }
-  .icon-btn.ai:active { background: #6a4cce; color: #fff; }
   #toolbar { display: none; gap: 6px; padding: 8px 10px; background: #1a1a1a; border-bottom: 1px solid #2a2a2a; overflow-x: auto; flex-shrink: 0; scrollbar-width: none; align-items: center; }
   #toolbar::-webkit-scrollbar { display: none; }
   #toolbar.show { display: flex; }
@@ -58,7 +55,6 @@
   .img-block img { display: block; width: 100%; height: 100%; pointer-events: none; object-fit: cover; }
   .img-block.selected { border-color: #97ce4c; }
   .img-block.present { border-color: transparent !important; cursor: default; }
-  .img-block.loading { background: repeating-linear-gradient(45deg, #222, #222 10px, #2a2a2a 10px, #2a2a2a 20px); }
   .handle { position: absolute; width: 20px; height: 20px; background: #97ce4c; border: 2px solid #0a0a0a; border-radius: 50%; z-index: 10; }
   .handle.tl { top: -10px; left: -10px; cursor: nwse-resize; }
   .handle.tr { top: -10px; right: -10px; cursor: nesw-resize; }
@@ -92,26 +88,15 @@
   #modal.show { display: flex; }
   #modal .box { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 18px; width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 10px; max-height: 85vh; overflow-y: auto; }
   #modal h3 { color: #97ce4c; font-size: 1rem; letter-spacing: 1px; }
-  #modal h3.ai-title { color: #b19aff; }
   #modal p { color: #aaa; font-size: 0.85rem; line-height: 1.4; }
   #modal .row { display: flex; gap: 10px; }
   #modal button { flex: 1; padding: 12px; border-radius: 8px; font-family: inherit; font-size: 0.9rem; cursor: pointer; border: 1px solid #333; background: #222; color: #eee; }
   #modal button.primary { background: #97ce4c; color: #0a0a0a; border-color: #97ce4c; font-weight: bold; }
-  #modal button.ai-primary { background: #6a4cce; color: #fff; border-color: #6a4cce; font-weight: bold; }
-  #modal input[type="text"], #modal input[type="number"], #modal textarea, #modal select { padding: 12px; border-radius: 8px; border: 1px solid #333; background: #111; color: #eee; font-family: inherit; font-size: 1rem; width: 100%; }
-  #modal textarea { min-height: 130px; resize: vertical; }
-  #modal .option-row { display: flex; gap: 6px; flex-wrap: wrap; }
-  #modal .option { padding: 8px 12px; border-radius: 8px; background: #222; border: 1px solid #333; color: #eee; cursor: pointer; font-size: 0.85rem; font-family: inherit; }
-  #modal .option.active { background: #97ce4c; color: #0a0a0a; }
+  #modal input[type="text"] { padding: 12px; border-radius: 8px; border: 1px solid #333; background: #111; color: #eee; font-family: inherit; font-size: 1rem; width: 100%; }
   #modal .tpl-list { display: flex; flex-direction: column; gap: 8px; }
   #modal .tpl-item { background: #222; border: 1px solid #333; border-radius: 8px; padding: 12px; cursor: pointer; color: #eee; display: flex; gap: 10px; align-items: center; font-family: inherit; font-size: 0.9rem; text-align: left; }
   #modal .tpl-item:active { background: #97ce4c; color: #0a0a0a; }
   #modal .tpl-item .ico { font-size: 1.4rem; }
-  #aiLoader { display: none; flex-direction: column; align-items: center; gap: 14px; padding: 20px; }
-  #aiLoader.show { display: flex; }
-  .spinner { width: 42px; height: 42px; border: 4px solid #333; border-top-color: #b19aff; border-radius: 50%; animation: spin 0.8s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  #aiLoader .txt { color: #b19aff; font-size: 0.85rem; letter-spacing: 1px; }
   #toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: #97ce4c; color: #0a0a0a; padding: 10px 18px; border-radius: 20px; font-size: 0.85rem; opacity: 0; pointer-events: none; transition: all 0.25s; z-index: 999; font-weight: bold; max-width: 90vw; text-align: center; }
   #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   #fab { position: fixed; right: 14px; bottom: 90px; width: 54px; height: 54px; border-radius: 50%; background: #97ce4c; color: #0a0a0a; border: none; font-size: 1.6rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 16px rgba(151,206,76,0.5); z-index: 500; display: flex; align-items: center; justify-content: center; }
@@ -125,15 +110,14 @@
 
 <div id="menu">
   <div id="menuHeader">
-    <h1>РИК-ПРЕЗЕНТАЦИИ™ AI</h1>
+    <h1>РИК-ПРЕЗЕНТАЦИИ™</h1>
     <button class="icon-btn" id="importBtn" title="Импорт">⬆</button>
     <button class="icon-btn" id="exportAllBtn" title="Экспорт">⬇</button>
   </div>
-  <div id="menuSub">AI через прокси-сервер</div>
+  <div id="menuSub">Редактор презентаций</div>
   <div id="presList"></div>
   <div id="menuFooter">
-    <button id="aiNewBtn" class="ai">🤖 ИИ</button>
-    <button id="newPresBtn" class="primary">+ ПУСТАЯ</button>
+    <button id="newPresBtn" class="primary">+ НОВАЯ ПРЕЗЕНТАЦИЯ</button>
   </div>
 </div>
 
@@ -141,7 +125,6 @@
   <div id="topbar">
     <button class="icon-btn" id="backBtn">←</button>
     <div class="title" id="docTitle">Презентация</div>
-    <button class="icon-btn ai" id="aiBtn" title="ИИ">🤖</button>
     <button class="icon-btn" id="renameBtn">✎</button>
     <button class="icon-btn" id="textBtn">T</button>
     <button class="icon-btn" id="imgBtn">🖼</button>
@@ -187,10 +170,6 @@
     <h3 id="modalTitle">Заголовок</h3>
     <p id="modalText"></p>
     <div id="modalContent"></div>
-    <div id="aiLoader">
-      <div class="spinner"></div>
-      <div class="txt" id="aiLoaderText">Генерирую...</div>
-    </div>
     <div class="row">
       <button id="modalCancel">Отмена</button>
       <button id="modalOk" class="primary">OK</button>
@@ -199,19 +178,8 @@
 </div>
 
 <script>
-/* ============================================================
-   НАСТРОЙКИ
-   ============================================================ */
-// USER_API_KEY больше НЕ НУЖЕН. Ключ живёт на сервере Vercel (GEMINI_KEY).
-const USER_API_KEY = '';
-// Модель Gemini. Если у тебя работает другая — поменяй.
-const GEMINI_MODEL = 'gemini-3.8-flash';
-// Картинки. false = отключены (рекомендуется).
-const ENABLE_IMAGES = false;
-/* ============================================================ */
-
 (function(){
-  const STORAGE_KEY = 'rick_presentations_v10';
+  const STORAGE_KEY = 'rick_presentations_v11';
 
   const menu = document.getElementById('menu');
   const editor = document.getElementById('editor');
@@ -230,8 +198,6 @@ const ENABLE_IMAGES = false;
   const modalContent = document.getElementById('modalContent');
   const modalOk = document.getElementById('modalOk');
   const modalCancel = document.getElementById('modalCancel');
-  const aiLoader = document.getElementById('aiLoader');
-  const aiLoaderText = document.getElementById('aiLoaderText');
   const fileInput = document.getElementById('fileInput');
   const importInput = document.getElementById('importInput');
   const colorInput = document.getElementById('colorInput');
@@ -284,7 +250,7 @@ const ENABLE_IMAGES = false;
     if (!db.order.length) {
       const e = document.createElement('div');
       e.style.cssText = 'text-align:center;padding:40px 20px;color:#555;font-size:0.9rem;line-height:1.6;';
-      e.innerHTML = 'Пусто, Морти.<br>Жми «🤖 ИИ» и опиши что хочешь.';
+      e.innerHTML = 'Пока пусто, Морти.<br>Жми «+ НОВАЯ ПРЕЗЕНТАЦИЯ».';
       presList.appendChild(e);
       return;
     }
@@ -402,17 +368,6 @@ const ENABLE_IMAGES = false;
     } else {
       const img = document.createElement('img');
       img.src = el.src; img.draggable = false;
-      img.crossOrigin = 'anonymous';
-      img.onload = () => node.classList.remove('loading');
-      img.onerror = () => {
-        node.classList.remove('loading');
-        if (el._fallbackSrc && img.src !== el._fallbackSrc) {
-          img.src = el._fallbackSrc;
-        } else {
-          node.style.display = 'none';
-        }
-      };
-      if (!img.complete) node.classList.add('loading');
       node.appendChild(img);
     }
     makeDraggable(node, el);
@@ -866,7 +821,6 @@ const ENABLE_IMAGES = false;
       }},
     ];
     modalTitle.textContent = 'Новый слайд';
-    modalTitle.className = '';
     modalText.textContent = 'Выбери шаблон:';
     modalContent.innerHTML = '';
     const list = document.createElement('div'); list.className = 'tpl-list';
@@ -903,246 +857,11 @@ const ENABLE_IMAGES = false;
     }, opts || {});
   }
 
-  const AI_LOCAL = {
-    generate(topic, count, style){
-      const T = topic.trim() || 'Тема';
-      const slides = [];
-      const ts = newSlide();
-      if (style === 'dark') {
-        ts.bg = '#111111';
-        ts.elements.push(txt(T, 15, 100, 270, 100, {fontSize: 36, align: 'center', bold: true, color: '#97ce4c', fontFamily: 'Impact'}));
-        ts.elements.push(txt('Презентация', 40, 210, 220, 30, {fontSize: 16, align: 'center', italic: true, color: '#888888'}));
-      } else {
-        ts.elements.push(txt(T, 20, 80, 260, 80, {fontSize: 34, align: 'center', bold: true}));
-        ts.elements.push(txt('Презентация', 40, 180, 220, 40, {fontSize: 18, align: 'center', italic: true, color: '#666666'}));
-      }
-      slides.push(ts);
-      const sections = ['Введение','Проблема','Решение','Примеры','Факты','Выводы'];
-      const totalContent = Math.max(2, count - 2);
-      for (let i = 0; i < totalContent; i++) {
-        const st = sections[i % sections.length];
-        const s = newSlide();
-        if (style === 'dark') s.bg = '#1a1a1a';
-        const titleColor = style === 'dark' ? '#97ce4c' : '#111111';
-        const textColor = style === 'dark' ? '#eee' : '#222';
-        s.elements.push(txt(st, 15, 15, 270, 60, {fontSize: 24, bold: true, color: titleColor, align: 'center', underline: style === 'light'}));
-        let yy = 85;
-        for (let j = 1; j <= 4; j++) {
-          s.elements.push(txt('• Пункт ' + j + ' по теме', 20, yy, 260, 40, {fontSize: 15, lineHeight: 1.4, color: textColor}));
-          yy += 40;
-        }
-        slides.push(s);
-      }
-      const fs = newSlide();
-      if (style === 'dark') fs.bg = '#111111';
-      fs.elements.push(txt('Спасибо!', 20, 120, 260, 60, {fontSize: 36, align: 'center', bold: true, color: style === 'dark' ? '#97ce4c' : '#111111'}));
-      fs.elements.push(txt('Вопросы?', 20, 200, 260, 40, {fontSize: 20, align: 'center', italic: true, color: '#666666'}));
-      slides.push(fs);
-      return slides.slice(0, count);
-    }
-  };
-
-  async function generateWithAI(userPrompt){
-    const sysPrompt = `Ты — генератор презентаций. Пользователь даёт свободное описание. Ты анализируешь его и создаёшь структуру презентации.
-Верни ТОЛЬКО валидный JSON без markdown:
-{"title":"Название презентации","style":"light|dark|minimal","slides":[{"title":"...","bullets":["...","..."]}]}
-Правила:
-- Первый слайд — титульный с заголовком = тема.
-- Последний — финальный "Спасибо!".
-- Между ними — содержательные слайды с 3-5 пунктами каждый.
-- "style" выбирай из текста: тёмный → dark, минимал → minimal, иначе light.
-- Количество слайдов: если сказано число — используй, иначе 6-8.
-- Пиши на русском.
-- Каждый буллет — короткая фраза до 80 символов.
-- Без markdown-обёрток, чистый JSON.`;
-
-    try {
-      const res = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prompt: sysPrompt + '\n\nЗапрос: ' + userPrompt,
-          model: GEMINI_MODEL
-        })
-      });
-      const rawText = await res.text();
-      if (!res.ok) {
-        showErrorDialog('Прокси вернул ' + res.status, rawText);
-        throw new Error('Proxy ' + res.status);
-      }
-      let data;
-      try { data = JSON.parse(rawText); } catch(e) { showErrorDialog('Ответ не JSON', rawText.slice(0, 800)); throw e; }
-      const text = (data.candidates?.[0]?.content?.parts?.[0]?.text || '').trim();
-      if (!text) { showErrorDialog('Пустой ответ', rawText.slice(0, 800)); throw new Error('Empty'); }
-      const cleaned = text.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/```$/,'').trim();
-      let parsed;
-      try { parsed = JSON.parse(cleaned); } catch(e) { showErrorDialog('Не распарсил JSON', text.slice(0, 800)); throw e; }
-      if (parsed && Array.isArray(parsed.slides) && parsed.slides.length) {
-        return {
-          title: parsed.title || 'Презентация',
-          style: parsed.style || 'light',
-          slides: buildSlidesFromAI(parsed.slides, parsed.style || 'light', parsed.title || 'Презентация')
-        };
-      }
-      showErrorDialog('Структура не та', JSON.stringify(parsed).slice(0, 800));
-      throw new Error('Bad structure');
-    } catch(e) {
-      console.error('AI error:', e);
-      showToast('ИИ не ответил, использую локальный');
-      await sleep(400);
-      const count = parseCountFromPrompt(userPrompt) || 6;
-      const style = parseStyleFromPrompt(userPrompt) || 'light';
-      const title = userPrompt.slice(0, 50);
-      return { title, style, slides: AI_LOCAL.generate(userPrompt, count, style) };
-    }
-  }
-
-  function parseCountFromPrompt(p){
-    const m = p.match(/(\d+)\s*(слайд|страниц|шт)/i) || p.match(/слайд[ов]*\s*(\d+)/i);
-    if (m) return Math.max(3, Math.min(20, parseInt(m[1], 10)));
-    return null;
-  }
-  function parseStyleFromPrompt(p){
-    const low = p.toLowerCase();
-    if (low.includes('тёмн') || low.includes('темн') || low.includes('чёрн') || low.includes('черн') || low.includes('dark')) return 'dark';
-    if (low.includes('минимал') || low.includes('minimal') || low.includes('простой')) return 'minimal';
-    return 'light';
-  }
-
-  function showErrorDialog(title, text){
-    modalTitle.textContent = '⚠ ' + title;
-    modalTitle.className = '';
-    modalText.textContent = 'Скопируй это и покажи мне:';
-    modalContent.innerHTML = '';
-    modalContent.style.display = '';
-    aiLoader.classList.remove('show');
-    const pre = document.createElement('pre');
-    pre.style.cssText = 'background:#111;color:#ff9999;padding:10px;border-radius:8px;font-size:0.7rem;max-height:40vh;overflow:auto;white-space:pre-wrap;word-break:break-all;';
-    pre.textContent = text || '(пусто)';
-    modalContent.appendChild(pre);
-    modalOk.style.display = 'none';
-    modalCancel.textContent = 'Закрыть';
-    modalCancel.onclick = closeModal;
-    modal.classList.add('show');
-  }
-
-  function buildSlidesFromAI(items, style, topic){
-    const slides = [];
-    if (!items.length) return slides;
-
-    const first = items[0];
-    const ts = newSlide();
-    if (style === 'dark') ts.bg = '#111111';
-    ts.elements.push(txt(first.title || topic, 15, 30, 270, 90, {
-      fontSize: 26, align: 'center', bold: true,
-      color: style === 'dark' ? '#97ce4c' : '#111111',
-      fontFamily: style === 'dark' ? 'Impact' : 'inherit',
-      lineHeight: 1.25
-    }));
-    slides.push(ts);
-
-    for (let i = 1; i < items.length - 1; i++) {
-      const it = items[i];
-      const s = newSlide();
-      if (style === 'dark') s.bg = '#1a1a1a';
-      const titleColor = style === 'dark' ? '#97ce4c' : '#111111';
-      const textColor = style === 'dark' ? '#eeeeee' : '#222222';
-
-      s.elements.push(txt(it.title || ('Слайд ' + (i+1)), 15, 15, 270, 70, {
-        fontSize: 18, bold: true, color: titleColor,
-        align: 'left', lineHeight: 1.25
-      }));
-      let yy = 95;
-      (it.bullets || []).slice(0, 5).forEach(b => {
-        s.elements.push(txt('• ' + b, 15, yy, 270, 36, {
-          fontSize: 14, lineHeight: 1.4, color: textColor
-        }));
-        yy += 40;
-      });
-      slides.push(s);
-    }
-
-    if (items.length > 1) {
-      const last = items[items.length - 1];
-      const fs = newSlide();
-      if (style === 'dark') fs.bg = '#111111';
-      fs.elements.push(txt(last.title || 'Спасибо!', 20, 100, 260, 80, {
-        fontSize: 34, align: 'center', bold: true,
-        color: style === 'dark' ? '#97ce4c' : '#111111'
-      }));
-      if (last.bullets && last.bullets[0]) {
-        fs.elements.push(txt(last.bullets[0], 20, 195, 260, 50, {
-          fontSize: 16, align: 'center', italic: true,
-          color: style === 'dark' ? '#888888' : '#666666'
-        }));
-      }
-      slides.push(fs);
-    }
-    return slides;
-  }
-  function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
-
-  function openAIDialog(){
-    modalTitle.textContent = '🤖 Рик-ИИ';
-    modalTitle.className = 'ai-title';
-    modalText.textContent = 'Опиши, что хочешь — ИИ сделает сам.';
-    modalContent.innerHTML = '';
-    aiLoader.classList.remove('show'); modalContent.style.display = '';
-
-    const ta = document.createElement('textarea');
-    ta.placeholder = 'Например: "Сделай презентацию про квантовую физику, 8 слайдов, тёмный стиль"';
-    modalContent.appendChild(ta);
-
-    const hint = document.createElement('p');
-    hint.style.fontSize = '0.72rem';
-    hint.style.color = '#666';
-    hint.textContent = 'Запрос идёт через прокси-сервер Vercel. Ключ в безопасности.';
-    modalContent.appendChild(hint);
-
-    modalOk.style.display = '';
-    modalOk.className = 'ai-primary';
-    modalOk.textContent = '🤖 Сгенерировать';
-    modalCancel.textContent = 'Отмена';
-    modalCancel.style.display = '';
-    modalCancel.onclick = closeModal;
-    modal.classList.add('show');
-    setTimeout(() => ta.focus(), 50);
-
-    modalOk.onclick = async () => {
-      const prompt = ta.value.trim();
-      if (!prompt) { showToast('Опиши, что хочешь'); return; }
-
-      modalContent.style.display = 'none';
-      aiLoader.classList.add('show');
-      aiLoaderText.textContent = 'Думаю...';
-      modalOk.style.display = 'none';
-      modalCancel.style.display = 'none';
-
-      const result = await generateWithAI(prompt);
-
-      closeModal();
-      aiLoader.classList.remove('show');
-      modalContent.style.display = '';
-
-      const pr = newPresentation(result.title);
-      pr.slides = result.slides;
-      pr.current = 0;
-      pr.updatedAt = Date.now();
-      db.presentations[pr.id] = pr;
-      db.order.unshift(pr.id);
-      save();
-      openPres(pr.id);
-      showToast('Готово: ' + result.slides.length + ' слайдов');
-    };
-  }
-
   document.getElementById('backBtn').addEventListener('click', backToMenu);
   document.getElementById('textBtn').addEventListener('click', () => addText());
   document.getElementById('imgBtn').addEventListener('click', pickImage);
   document.getElementById('fab').addEventListener('click', () => addText());
   document.getElementById('dupBtn').addEventListener('click', duplicateSelected);
-  document.getElementById('aiBtn').addEventListener('click', openAIDialog);
-  document.getElementById('aiNewBtn').addEventListener('click', openAIDialog);
   document.getElementById('newPresBtn').addEventListener('click', createEmptyPres);
   document.getElementById('renameBtn').addEventListener('click', () => {
     const pr = cur(); if (!pr) return;
@@ -1253,9 +972,9 @@ const ENABLE_IMAGES = false;
   document.getElementById('importBtn').addEventListener('click', importData);
 
   function openPrompt(title, text, defaultValue, onOk){
-    modalTitle.textContent = title; modalTitle.className = '';
+    modalTitle.textContent = title;
     modalText.textContent = text || '';
-    modalContent.innerHTML = ''; aiLoader.classList.remove('show'); modalContent.style.display = '';
+    modalContent.innerHTML = '';
     const i = document.createElement('input'); i.type = 'text'; i.value = defaultValue;
     modalContent.appendChild(i);
     modalOk.style.display = ''; modalOk.className = 'primary';
@@ -1267,9 +986,9 @@ const ENABLE_IMAGES = false;
     i.onkeydown = ev => { if (ev.key === 'Enter') modalOk.click(); };
   }
   function openConfirm(title, text, onOk){
-    modalTitle.textContent = title; modalTitle.className = '';
+    modalTitle.textContent = title;
     modalText.textContent = text || '';
-    modalContent.innerHTML = ''; aiLoader.classList.remove('show'); modalContent.style.display = '';
+    modalContent.innerHTML = '';
     modalOk.style.display = ''; modalOk.className = 'primary';
     modalOk.textContent = 'Да'; modalCancel.textContent = 'Отмена'; modalCancel.style.display = '';
     modal.classList.add('show');
