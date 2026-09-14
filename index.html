@@ -9,7 +9,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; overflow: hidden; font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #eee; overscroll-behavior: none; }
 
-  /* AUTH */
   #authScreen { display: flex; flex-direction: column; height: 100vh; height: 100dvh; padding: 20px 24px; justify-content: center; background: radial-gradient(ellipse at top, #1a2a0a 0%, #0a0a0a 60%); overflow-y: auto; }
   .rick-hero { width: 130px; height: 130px; object-fit: contain; display: block; margin: 0 auto 10px; filter: drop-shadow(0 0 25px rgba(151,206,76,0.6)); animation: float 3s ease-in-out infinite; }
   @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
@@ -25,7 +24,6 @@
   #authScreen .error { color: #ff6b6b; font-size: 0.85rem; text-align: center; margin-top: 12px; min-height: 1.2em; }
   #authScreen .hint { color: #666; font-size: 0.72rem; text-align: center; margin-top: 20px; line-height: 1.5; }
 
-  /* MENU */
   #menu { display: none; flex-direction: column; height: 100vh; height: 100dvh; background: linear-gradient(180deg, #0a0a0a 0%, #141414 100%); }
   #menu.show { display: flex; }
   #menuHeader { padding: 14px 16px 8px; display: flex; align-items: center; gap: 10px; }
@@ -42,7 +40,6 @@
   .empty { text-align: center; padding: 30px 20px; color: #555; font-size: 0.9rem; line-height: 1.6; }
   .empty .morty-empty { width: 100px; height: 100px; object-fit: contain; opacity: 0.85; display: block; margin: 0 auto 14px; filter: drop-shadow(0 0 12px rgba(151,206,76,0.3)); }
 
-  /* CARDS */
   .pres-card { background: #161616; border: 1px solid #2a2a2a; border-radius: 12px; padding: 14px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; transition: all 0.15s; position: relative; margin-bottom: 10px; }
   .pres-card:active { background: #1d1d1d; border-color: #97ce4c; transform: scale(0.99); }
   .pres-card .p-title { font-size: 1.05rem; color: #eee; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 80px; }
@@ -51,14 +48,13 @@
   .pres-card .p-actions button { background: #222; border: 1px solid #333; color: #aaa; width: 30px; height: 30px; border-radius: 6px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .pres-card .p-actions button:active { background: #97ce4c; color: #0a0a0a; }
 
-  /* NEWS */
   .news-card { background: #161616; border: 1px solid #2a2a2a; border-radius: 12px; padding: 14px; margin-bottom: 10px; }
   .news-card h3 { color: #97ce4c; font-size: 1rem; margin-bottom: 6px; }
   .news-card .meta { font-size: 0.7rem; color: #666; margin-bottom: 8px; }
   .news-card .body { font-size: 0.9rem; line-height: 1.5; color: #ccc; white-space: pre-wrap; }
+  .news-card .news-img { width: 100%; max-height: 260px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; display: block; }
   .news-card .del { background: #551a1a; border: 1px solid #aa3333; color: #ff9999; padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; margin-top: 8px; }
 
-  /* USER CARDS */
   .user-card { background: #161616; border: 1px solid #2a2a2a; border-radius: 12px; padding: 14px; cursor: pointer; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
   .user-card:active { background: #1d1d1d; border-color: #97ce4c; }
   .user-card .avatar { width: 42px; height: 42px; border-radius: 50%; background: #97ce4c; color: #0a0a0a; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1rem; }
@@ -66,7 +62,6 @@
   .user-card .name { font-size: 1rem; color: #eee; font-weight: bold; }
   .user-card .email { font-size: 0.72rem; color: #777; margin-top: 2px; }
 
-  /* EDITOR */
   #editor { display: none; flex-direction: column; height: 100vh; height: 100dvh; }
   #editor.show { display: flex; }
   #topbar { display: flex; align-items: center; gap: 6px; padding: 8px 10px; background: #141414; border-bottom: 1px solid #2a2a2a; flex-shrink: 0; overflow-x: auto; scrollbar-width: none; }
@@ -159,7 +154,7 @@
 <body>
 
 <div id="authScreen">
-  <img class="rick-hero" src="https://static.wikia.nocookie.net/rickandmorty/images/a/a6/Rick_Sanchez.png/revision/latest?cb=20160918081333" alt="Rick" onerror="this.style.display='none'">
+  <img class="rick-hero" src="https://upload.wikimedia.org/wikipedia/en/c/c8/Rick_Sanchez.png" alt="Rick" onerror="this.style.display='none'">
   <h1>РИК-ПРЕЗЕНТАЦИИ™</h1>
   <div class="quote" id="authQuote">— Wubba lubba dub dub, Морти.</div>
   <div class="tabs">
@@ -176,7 +171,7 @@
 
 <div id="menu">
   <div id="menuHeader">
-    <img class="morty-avatar" id="mortyBtn" src="https://static.wikia.nocookie.net/rickandmorty/images/e/ee/Morty_Smith.png/revision/latest?cb=20160918081333" alt="Morty" onerror="this.style.display='none'">
+    <img class="morty-avatar" id="mortyBtn" src="https://upload.wikimedia.org/wikipedia/en/6/6e/Morty_Smith.png" alt="Morty" onerror="this.style.display='none'">
     <div style="flex:1;">
       <div class="user" id="userLabel">—</div>
     </div>
@@ -273,6 +268,7 @@ let presentations = {};
 let currentPresId = null;
 let selectedEl = null;
 let saveTimer = null;
+let newsImageBase64 = null;
 
 const authScreen = document.getElementById('authScreen');
 const menu = document.getElementById('menu');
@@ -309,7 +305,7 @@ const RICK_QUOTES = [
   '— Хочешь, чтобы я что-то сделал? Скажи волшебное слово.',
   '— Aww, jeez, Морти.',
   '— Я не работаю с Джерри. Это правило.',
-  '— Девяносто девять процентов моих изобретений взрываются. Остальные работают.'
+  '— 99% моих изобретений взрываются. Остальные работают.'
 ];
 function randomQuote(){ return RICK_QUOTES[Math.floor(Math.random() * RICK_QUOTES.length)]; }
 
@@ -331,7 +327,6 @@ function fmtDate(ts){
   return d.toLocaleDateString('ru-RU', {day:'2-digit',month:'2-digit',year:'2-digit'}) + ' ' + d.toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'});
 }
 
-// auth
 let authMode = 'login';
 document.getElementById('tabLogin').onclick = () => setAuthMode('login');
 document.getElementById('tabRegister').onclick = () => setAuthMode('register');
@@ -423,8 +418,7 @@ async function savePresentation(pr){
   if (!currentUser || !pr) return;
   try {
     await setDoc(doc(db, 'users', currentUser.uid, 'presentations', pr.id), {
-      title: pr.title,
-      slides: pr.slides,
+      title: pr.title, slides: pr.slides,
       animation: pr.animation || 'fade',
       updatedAt: serverTimestamp()
     });
@@ -456,7 +450,7 @@ function renderMine(){
   if (!ids.length) {
     content.innerHTML = `
       <div class="empty">
-        <img class="morty-empty" src="https://static.wikia.nocookie.net/rickandmorty/images/e/ee/Morty_Smith.png/revision/latest?cb=20160918081333" alt="Morty" onerror="this.style.display='none'">
+        <img class="morty-empty" src="https://upload.wikimedia.org/wikipedia/en/6/6e/Morty_Smith.png" alt="Morty" onerror="this.style.display='none'">
         <div style="color:#97ce4c;font-weight:bold;font-size:1rem;">Пока пусто, Морти.</div>
         <div style="margin-top:10px;font-style:italic;color:#97ce4c;font-size:0.8rem;">${randomQuote()}</div>
         <div style="margin-top:20px;">Жми зелёную кнопку «+» внизу.</div>
@@ -531,6 +525,7 @@ async function renderNews(){
       news.push({
         id: d.id, title: data.title || '', body: data.body || '',
         authorName: data.authorName || 'Аноним',
+        imageBase64: data.imageBase64 || null,
         createdAt: data.createdAt ? (data.createdAt.toMillis ? data.createdAt.toMillis() : 0) : 0
       });
     });
@@ -550,14 +545,15 @@ async function renderNews(){
   if (!news.length) {
     const e = document.createElement('div');
     e.className = 'empty';
-    e.innerHTML = `<img class="morty-empty" src="https://static.wikia.nocookie.net/rickandmorty/images/e/ee/Morty_Smith.png/revision/latest?cb=20160918081333" onerror="this.style.display='none'">Новостей пока нет.`;
+    e.innerHTML = `<img class="morty-empty" src="https://upload.wikimedia.org/wikipedia/en/6/6e/Morty_Smith.png" onerror="this.style.display='none'">Новостей пока нет.`;
     content.appendChild(e);
     return;
   }
   news.forEach(n => {
     const card = document.createElement('div');
     card.className = 'news-card';
-    card.innerHTML = `<h3>${esc(n.title)}</h3><div class="meta">${esc(n.authorName)} · ${fmtDate(n.createdAt)}</div><div class="body">${esc(n.body)}</div>`;
+    const imgHtml = n.imageBase64 ? `<img class="news-img" src="${n.imageBase64}" alt="">` : '';
+    card.innerHTML = `<h3>${esc(n.title)}</h3><div class="meta">${esc(n.authorName)} · ${fmtDate(n.createdAt)}</div>${imgHtml}<div class="body">${esc(n.body)}</div>`;
     if (isAdmin) {
       const del = document.createElement('button');
       del.className = 'del'; del.textContent = 'Удалить';
@@ -573,34 +569,107 @@ async function renderNews(){
   });
 }
 
+function compressImage(file, maxSize){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > h && w > maxSize) { h = Math.round(h * maxSize / w); w = maxSize; }
+        else if (h > maxSize) { w = Math.round(w * maxSize / h); h = maxSize; }
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        const ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(c.toDataURL('image/jpeg', 0.75));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 function addNews(){
   modalTitle.textContent = 'Новая новость';
   modalText.textContent = 'Что опубликовать?';
   modalContent.innerHTML = '';
-  const inpT = document.createElement('input'); inpT.type = 'text'; inpT.placeholder = 'Заголовок';
-  const inpB = document.createElement('textarea'); inpB.placeholder = 'Текст новости';
-  modalContent.appendChild(inpT); modalContent.appendChild(inpB);
+  newsImageBase64 = null;
+
+  const inpT = document.createElement('input');
+  inpT.type = 'text'; inpT.placeholder = 'Заголовок';
+
+  const inpB = document.createElement('textarea');
+  inpB.placeholder = 'Текст новости';
+
+  const imgLabel = document.createElement('button');
+  imgLabel.type = 'button';
+  imgLabel.style.cssText = 'width:100%;padding:12px;background:#222;border:1px dashed #555;color:#97ce4c;border-radius:8px;font-family:inherit;font-size:0.85rem;cursor:pointer;margin-top:6px;';
+  imgLabel.textContent = '📷 Добавить фото (необязательно)';
+
+  const preview = document.createElement('img');
+  preview.style.cssText = 'display:none;width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:8px;';
+
+  const imgInput = document.createElement('input');
+  imgInput.type = 'file'; imgInput.accept = 'image/*';
+  imgInput.style.display = 'none';
+
+  imgLabel.onclick = () => imgInput.click();
+  imgInput.onchange = async () => {
+    const f = imgInput.files[0]; if (!f) return;
+    imgLabel.textContent = '⏳ Обрабатываю...';
+    try {
+      const b64 = await compressImage(f, 800);
+      newsImageBase64 = b64;
+      preview.src = b64;
+      preview.style.display = 'block';
+      imgLabel.textContent = '✓ Фото добавлено (тапни чтобы заменить)';
+      imgLabel.style.borderColor = '#97ce4c';
+    } catch(e) {
+      showToast('Не удалось загрузить фото');
+      imgLabel.textContent = '📷 Добавить фото (необязательно)';
+    }
+  };
+
+  modalContent.appendChild(inpT);
+  modalContent.appendChild(inpB);
+  modalContent.appendChild(imgLabel);
+  modalContent.appendChild(preview);
+  modalContent.appendChild(imgInput);
+
   modalOk.style.display = ''; modalOk.className = 'primary';
   modalOk.textContent = 'Опубликовать';
   modalCancel.textContent = 'Отмена';
   modal.classList.add('show');
   setTimeout(() => inpT.focus(), 50);
+
   modalOk.onclick = async () => {
     const t = inpT.value.trim(), b = inpB.value.trim();
     if (!t || !b) { showToast('Заполни оба поля'); return; }
-    closeModal();
+    modalOk.disabled = true;
+    modalOk.textContent = 'Публикую...';
     try {
-      await addDoc(collection(db, 'news'), {
+      const newsDoc = {
         title: t, body: b,
         authorUid: currentUser.uid,
         authorName: userName,
         createdAt: serverTimestamp()
-      });
+      };
+      if (newsImageBase64) newsDoc.imageBase64 = newsImageBase64;
+      await addDoc(collection(db, 'news'), newsDoc);
+      newsImageBase64 = null;
+      closeModal();
       showToast('Опубликовано');
       renderNews();
-    } catch(e) { showToast('Ошибка: ' + e.message); }
+    } catch(e) {
+      showToast('Ошибка: ' + e.message);
+      modalOk.disabled = false;
+      modalOk.textContent = 'Опубликовать';
+    }
   };
-  modalCancel.onclick = closeModal;
+  modalCancel.onclick = () => { newsImageBase64 = null; closeModal(); };
 }
 
 async function renderCommunity(){
@@ -666,7 +735,7 @@ async function openUserFolder(u){
 }
 
 function importPresFromOther(p, authorName){
-  openConfirm('Импортировать?', `«${p.title}» от ${authorName} → в твои презентации`, async () => {
+  openConfirm('Импортировать?', `«${p.title}» от ${authorName}`, async () => {
     const nid = uid();
     const copy = {
       id: nid,
@@ -686,7 +755,6 @@ function importPresFromOther(p, authorName){
   });
 }
 
-// ===== EDITOR =====
 function openPres(id){
   currentPresId = id;
   menu.classList.remove('show');
@@ -1355,7 +1423,6 @@ function openAnimDialog(){
   modal.classList.add('show');
 }
 
-// ===== FUN BUTTONS =====
 document.getElementById('mortyBtn').onclick = () => showToast(randomQuote());
 setInterval(() => {
   const q = document.getElementById('authQuote');
@@ -1378,7 +1445,6 @@ document.getElementById('changeNameBtn').onclick = () => {
   });
 };
 
-// ===== MAIN BUTTONS =====
 document.getElementById('backBtn').onclick = backToMenu;
 document.getElementById('textBtn').onclick = () => addText();
 document.getElementById('imgBtn').onclick = pickImage;
